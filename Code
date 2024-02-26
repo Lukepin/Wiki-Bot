@@ -1,0 +1,66 @@
+import discord
+from discord.ext import commands
+
+TOKEN = 'GET_THIS_FROM https://discord.com/developers/applications'
+intents = discord.Intents.default()
+intents.message_content = True
+
+client = commands.Bot(command_prefix='.', intents=intents)
+
+@client.event
+async def on_ready():
+    print('bot ready')
+
+@client.event
+async def on_message(message):
+    print(message.author, message.content, message.channel.id)
+
+@client.command()
+async def hello(ctx):
+    channel = client.get_channel(1033759192596619386)
+    await channel.send(f'hello there {ctx.author.mention}')
+
+# Function to generate code snippets
+def generate_code(language, complexity):
+    if language.lower() == 'python':
+        if complexity.lower() == 'simple':
+            return generate_simple_python_code()
+        elif complexity.lower() == 'intermediate':
+            return generate_intermediate_python_code()
+        elif complexity.lower() == 'advanced':
+            return generate_advanced_python_code()
+        else:
+            return "Complexity level not recognized."
+    else:
+        return "Language not supported."
+
+def generate_simple_python_code():
+    code_snippets = [
+        "print('Hello, world!')",
+        "x = 5\ny = 10\nprint(x + y)",
+        "name = input('Enter your name: ')\nprint('Hello,', name)"
+    ]
+    return random.choice(code_snippets)
+
+def generate_intermediate_python_code():
+    code_snippets = [
+        "def factorial(n):\n    if n == 0:\n        return 1\n    else:\n        return n * factorial(n-1)",
+        "numbers = [1, 2, 3, 4, 5]\nsum = 0\nfor num in numbers:\n    sum += num\nprint('Sum:', sum)",
+        "def is_prime(n):\n    if n <= 1:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True"
+    ]
+    return random.choice(code_snippets)
+
+def generate_advanced_python_code():
+    code_snippets = [
+        "import numpy as np\narray = np.array([1, 2, 3, 4, 5])\nprint('Mean:', np.mean(array))",
+        "import pandas as pd\ndata = {'Name': ['John', 'Anna', 'Peter'], 'Age': [25, 30, 35]}\ndf = pd.DataFrame(data)\nprint(df)",
+        "import matplotlib.pyplot as plt\nx = [1, 2, 3, 4, 5]\ny = [2, 4, 6, 8, 10]\nplt.plot(x, y)\nplt.xlabel('X-axis')\nplt.ylabel('Y-axis')\nplt.title('Simple Plot')\nplt.show()"
+    ]
+    return random.choice(code_snippets)
+
+@client.command()
+async def generate(ctx, language, complexity):
+    generated_code = generate_code(language, complexity)
+    await ctx.send("Generated code snippet:\n```" + generated_code + "```")
+
+client.run(TOKEN)
